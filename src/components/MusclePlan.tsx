@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { Tab } from '@headlessui/react';
 import { 
-  Grid, 
   Paper, 
   Typography, 
   List, 
@@ -11,7 +10,7 @@ import {
   Checkbox, 
   FormControlLabel 
 } from '@mui/material';
-import { Sparkles, ShoppingCart } from 'lucide-react';
+import { Sparkles, ShoppingCart, Dumbbell, CheckCircle2, Clock, Target } from 'lucide-react';
 import { plan } from '../data/plan';
 
 const MusclePlan: React.FC = () => {
@@ -42,56 +41,84 @@ const MusclePlan: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-4">
-            <Sparkles className="w-12 h-12 text-indigo-600 mr-3" />
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-800">
+        {/* Enhanced Header */}
+        <div className="text-center mb-16">
+          <div className="flex items-center justify-center mb-6">
+            <div className="relative">
+              <Sparkles className="w-16 h-16 text-indigo-600 animate-pulse" />
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full animate-bounce"></div>
+            </div>
+            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 bg-clip-text text-transparent ml-4">
               7-Day Muscle Building Plan
             </h1>
           </div>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Transform your physique with this comprehensive nutrition and workout program
+          <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            Transform your physique with this comprehensive nutrition and workout program designed for optimal muscle growth
           </p>
+          <div className="flex justify-center items-center gap-6 mt-8">
+            <div className="flex items-center gap-2 text-slate-500">
+              <Target className="w-5 h-5" />
+              <span className="font-medium">7 Days</span>
+            </div>
+            <div className="flex items-center gap-2 text-slate-500">
+              <Clock className="w-5 h-5" />
+              <span className="font-medium">Beginner Friendly</span>
+            </div>
+            <div className="flex items-center gap-2 text-slate-500">
+              <Dumbbell className="w-5 h-5" />
+              <span className="font-medium">Muscle Building</span>
+            </div>
+          </div>
         </div>
 
-        {/* Shopping Section */}
-        <section className="mb-12">
-          <div className="flex items-center mb-6">
-            <ShoppingCart className="w-8 h-8 text-indigo-600 mr-3" />
-            <h2 className="text-3xl font-bold text-gray-800">Shopping List</h2>
+        {/* Enhanced Shopping Section */}
+        <section className="mb-16">
+          <div className="flex items-center justify-center mb-8">
+            <div className="relative">
+              <ShoppingCart className="w-10 h-10 text-emerald-600 mr-3" />
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
+            </div>
+            <h2 className="text-4xl font-bold text-slate-800">Shopping List</h2>
           </div>
           
-          <Grid container spacing={3}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {plan.shopping.map((section, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
+              <div key={index} className="group">
                 <Paper 
-                  elevation={2} 
-                  className="p-6 h-full transition-all duration-300 hover:shadow-lg hover:scale-105"
+                  elevation={0} 
+                  className="p-6 h-full bg-white/80 backdrop-blur-sm border border-slate-200/50 rounded-2xl transition-all duration-500 hover:shadow-2xl hover:scale-105 hover:bg-white group-hover:border-indigo-300"
                 >
-                  <Typography variant="h6" className="font-bold text-gray-800 mb-4 text-center">
-                    {section.category}
-                  </Typography>
-                  <List dense>
+                  <div className="flex items-center justify-between mb-4">
+                    <Typography variant="h6" className="font-bold text-slate-800 text-lg">
+                      {section.category}
+                    </Typography>
+                    <div className="w-3 h-3 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full opacity-60 group-hover:opacity-100 transition-opacity"></div>
+                  </div>
+                  <List dense className="space-y-1">
                     {section.items.map((item, itemIndex) => (
-                      <ListItem key={itemIndex} className="px-0">
+                      <ListItem key={itemIndex} className="px-0 py-1">
                         <FormControlLabel
                           control={
                             <Checkbox
                               checked={boughtItems.has(item)}
                               onChange={() => toggleBoughtItem(item)}
-                              className="text-indigo-600"
+                              className="text-emerald-600"
+                              sx={{
+                                '&.Mui-checked': {
+                                  color: '#059669',
+                                },
+                              }}
                             />
                           }
                           label={
                             <span 
                               className={`${
                                 boughtItems.has(item) 
-                                  ? 'line-through text-gray-400' 
-                                  : 'text-gray-700'
-                              } transition-colors duration-200`}
+                                  ? 'line-through text-slate-400' 
+                                  : 'text-slate-700'
+                              } transition-all duration-300 text-sm font-medium`}
                             >
                               {item}
                             </span>
@@ -101,148 +128,175 @@ const MusclePlan: React.FC = () => {
                     ))}
                   </List>
                 </Paper>
-              </Grid>
+              </div>
             ))}
-          </Grid>
+          </div>
         </section>
 
-        {/* Daily Plans Section */}
+        {/* Enhanced Daily Plans Section */}
         <section>
-          <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+          <h2 className="text-4xl font-bold text-slate-800 mb-12 text-center">
             Daily Plans
           </h2>
           
           <Tab.Group>
-            <Tab.List className="flex flex-wrap justify-center bg-white rounded-xl p-2 mb-8 shadow-lg">
+            <Tab.List className="flex flex-wrap justify-center bg-white/90 backdrop-blur-sm rounded-2xl p-3 mb-10 shadow-lg border border-slate-200/50">
               {plan.days.map((day, index) => (
                 <Tab
                   key={index}
                   className={({ selected }) =>
-                    `px-4 py-2 m-1 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 ${
+                    `px-6 py-3 m-1 rounded-xl font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 ${
                       selected
-                        ? 'bg-indigo-700 text-white shadow-md'
-                        : 'text-indigo-500 hover:bg-indigo-50 hover:text-indigo-700'
+                        ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg scale-105'
+                        : 'text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 hover:scale-102'
                     }`
                   }
                 >
-                  {day.name}
+                  <div className="flex items-center gap-2">
+                    {completedDays.has(day.name) && (
+                      <CheckCircle2 className="w-4 h-4" />
+                    )}
+                    {day.name}
+                  </div>
                 </Tab>
               ))}
             </Tab.List>
 
             <Tab.Panels>
               {plan.days.map((day, dayIndex) => (
-                <Tab.Panel key={dayIndex}>
-                  <div className="mb-4 flex items-center justify-center">
+                <Tab.Panel key={dayIndex} className="animate-fade-in">
+                  <div className="mb-8 flex items-center justify-center">
                     <FormControlLabel
                       control={
                         <Checkbox
                           checked={completedDays.has(day.name)}
                           onChange={() => toggleCompletedDay(day.name)}
-                          className="text-green-600"
+                          sx={{
+                            '&.Mui-checked': {
+                              color: '#059669',
+                            },
+                          }}
                         />
                       }
                       label={
-                        <span className="text-lg font-semibold text-gray-700">
+                        <span className="text-lg font-semibold text-slate-700 flex items-center gap-2">
+                          <CheckCircle2 className="w-5 h-5" />
                           Mark {day.name} as completed
                         </span>
                       }
                     />
                   </div>
 
-                  <Grid container spacing={4}>
-                    {/* Meal 1 */}
-                    <Grid item xs={12} md={4}>
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* Enhanced Meal 1 */}
+                    <div className="group">
                       <Paper 
-                        elevation={3} 
-                        className={`p-6 bg-gray-50 border-t-4 border-indigo-500 transition-all duration-300 hover:shadow-lg ${
-                          completedDays.has(day.name) ? 'opacity-60' : ''
+                        elevation={0} 
+                        className={`p-8 bg-gradient-to-br from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-2xl transition-all duration-500 hover:shadow-xl hover:scale-105 ${
+                          completedDays.has(day.name) ? 'opacity-60 grayscale' : ''
                         }`}
                       >
-                        <Typography variant="h6" className="font-bold text-indigo-700 mb-4">
-                          Meal 1
-                        </Typography>
-                        <List dense>
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                          <Typography variant="h6" className="font-bold text-blue-700">
+                            Meal 1
+                          </Typography>
+                        </div>
+                        <List dense className="space-y-3">
                           {day.meal1.map((meal, mealIndex) => (
-                            <ListItem key={mealIndex} className="px-0">
+                            <ListItem key={mealIndex} className="px-0 py-2 bg-white/50 rounded-lg">
                               <ListItemText
                                 primary={
-                                  <strong className="text-gray-800">{meal.label}</strong>
+                                  <strong className="text-slate-800 text-sm">{meal.label}</strong>
                                 }
                                 secondary={
-                                  <span className="text-gray-600">{meal.detail}</span>
+                                  <span className="text-slate-600 text-xs">{meal.detail}</span>
                                 }
                               />
                             </ListItem>
                           ))}
                         </List>
                       </Paper>
-                    </Grid>
+                    </div>
 
-                    {/* Meal 2 */}
-                    <Grid item xs={12} md={4}>
+                    {/* Enhanced Meal 2 */}
+                    <div className="group">
                       <Paper 
-                        elevation={3} 
-                        className={`p-6 bg-gray-50 border-t-4 border-indigo-500 transition-all duration-300 hover:shadow-lg ${
-                          completedDays.has(day.name) ? 'opacity-60' : ''
+                        elevation={0} 
+                        className={`p-8 bg-gradient-to-br from-purple-50 to-pink-50 border-l-4 border-purple-500 rounded-2xl transition-all duration-500 hover:shadow-xl hover:scale-105 ${
+                          completedDays.has(day.name) ? 'opacity-60 grayscale' : ''
                         }`}
                       >
-                        <Typography variant="h6" className="font-bold text-indigo-700 mb-4">
-                          Meal 2
-                        </Typography>
-                        <List dense>
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                          <Typography variant="h6" className="font-bold text-purple-700">
+                            Meal 2
+                          </Typography>
+                        </div>
+                        <List dense className="space-y-3">
                           {day.meal2.map((meal, mealIndex) => (
-                            <ListItem key={mealIndex} className="px-0">
+                            <ListItem key={mealIndex} className="px-0 py-2 bg-white/50 rounded-lg">
                               <ListItemText
                                 primary={
-                                  <strong className="text-gray-800">{meal.label}</strong>
+                                  <strong className="text-slate-800 text-sm">{meal.label}</strong>
                                 }
                                 secondary={
-                                  <span className="text-gray-600">{meal.detail}</span>
+                                  <span className="text-slate-600 text-xs">{meal.detail}</span>
                                 }
                               />
                             </ListItem>
                           ))}
                         </List>
                       </Paper>
-                    </Grid>
+                    </div>
 
-                    {/* Workout */}
-                    <Grid item xs={12} md={4}>
+                    {/* Enhanced Workout */}
+                    <div className="group">
                       <Paper 
-                        elevation={3} 
-                        className={`p-6 bg-green-50 border-t-4 border-green-500 transition-all duration-300 hover:shadow-lg ${
-                          completedDays.has(day.name) ? 'opacity-60' : ''
+                        elevation={0} 
+                        className={`p-8 bg-gradient-to-br from-emerald-50 to-green-50 border-l-4 border-emerald-500 rounded-2xl transition-all duration-500 hover:shadow-xl hover:scale-105 ${
+                          completedDays.has(day.name) ? 'opacity-60 grayscale' : ''
                         }`}
                       >
-                        <Typography variant="h6" className="font-bold text-green-700 mb-4">
-                          Workout
-                        </Typography>
-                        <List dense>
+                        <div className="flex items-center gap-3 mb-6">
+                          <Dumbbell className="w-5 h-5 text-emerald-600" />
+                          <Typography variant="h6" className="font-bold text-emerald-700">
+                            Workout
+                          </Typography>
+                        </div>
+                        <List dense className="space-y-3">
                           {day.workout.map((exercise, exerciseIndex) => (
-                            <ListItem key={exerciseIndex} className="px-0">
+                            <ListItem key={exerciseIndex} className="px-0 py-2 bg-white/50 rounded-lg">
                               <ListItemText
                                 primary={
-                                  <span className="text-gray-800 font-medium">{exercise}</span>
+                                  <span className="text-slate-800 font-medium text-sm flex items-center gap-2">
+                                    <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                                    {exercise}
+                                  </span>
                                 }
                               />
                             </ListItem>
                           ))}
                         </List>
                       </Paper>
-                    </Grid>
-                  </Grid>
+                    </div>
+                  </div>
                 </Tab.Panel>
               ))}
             </Tab.Panels>
           </Tab.Group>
         </section>
 
-        {/* Footer */}
-        <footer className="text-center mt-16 py-8">
-          <p className="text-gray-500 text-sm">
-            Stay consistent, stay strong! 💪 Your transformation starts today.
-          </p>
+        {/* Enhanced Footer */}
+        <footer className="text-center mt-20 py-12">
+          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            <p className="text-lg font-semibold mb-2">
+              Stay consistent, stay strong! 💪
+            </p>
+            <p className="text-slate-600">
+              Your transformation starts today.
+            </p>
+          </div>
         </footer>
       </div>
     </div>
