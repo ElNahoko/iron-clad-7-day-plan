@@ -1,73 +1,119 @@
-# Welcome to your Lovable project
+# Iron Clad 7‑Day Plan 🚀
 
-## Project info
+A complete, interactive 7‑day muscle‑building nutrition and workout plan built with React, TypeScript, Tailwind CSS, MUI, and Headless UI.
 
-**URL**: https://lovable.dev/projects/309fb3c6-9c30-4253-b58f-3f1e89f28f14
+---
 
-## How can I edit this code?
+## 🚀 Project Overview
 
-There are several ways of editing your application.
+**Iron Clad 7‑Day Plan** helps you track daily meals, macros, cooking instructions, and workouts, plus grocery shopping with cost estimates.
 
-**Use Lovable**
+**Key Features:**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/309fb3c6-9c30-4253-b58f-3f1e89f28f14) and start prompting.
+- Interactive checklists for groceries and daily completion
+- Nutrition breakdown (protein, carbs, fats, calories, fiber) with tooltips
+- Cooking instructions for every meal
+- Price estimates per meal and weekly total
+- Responsive UI with Tailwind CSS and MUI components
+- Tabbed navigation (Headless UI)
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## 🛠 Installation & Development
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. **Clone the repository**
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+   ```sh
+   git clone <YOUR_GIT_URL>
+   cd <YOUR_PROJECT_NAME>
+   ```
 
-Follow these steps:
+2. **Install dependencies**
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+   ```sh
+   npm install
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+3. **Start development server**
 
-# Step 3: Install the necessary dependencies.
-npm i
+   ```sh
+   npm run dev
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+4. **Build for production**
+
+   ```sh
+   npm run build
+   ```
+
+5. **Preview production build**
+
+   ```sh
+   npm run preview
+   ```
+
+---
+
+## 🔧 Tech Stack
+
+- **Framework:** React + TypeScript
+- **Bundler:** Vite
+- **Styling:** Tailwind CSS
+- **UI Components:** MUI (Material UI)
+- **Icons:** lucide‑react
+- **Tabs & Accessibility:** Headless UI
+
+---
+
+## 🗂️ Project Structure
+
+```
+/src
+├─ data/
+│  └─ plan.ts       # nutrition, meals, pricing, instructions
+├─ components/
+│  └─ MusclePlan.tsx
+├─ main.tsx         # React entry point
+├─ App.tsx          # routing & layout
+└─ index.html       # updated document head & favicon
+
+/public
+├─ favicon.ico
+└─ og-image.png     # Open Graph image
 ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## ⚙️ Configuration
 
-**Use GitHub Codespaces**
+- **index.html**: project title, meta tags, favicon link
+- **tailwind.config.js**: include `./src/**/*.{ts,tsx}` in `content`
+- **tsconfig.json**: ensure strict TypeScript settings
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## ✅ Usage
 
-This project is built with:
+- **Grocery Checklist**: check items to mark as bought; triggers line‑through animation
+- **Daily Tabs**: navigate days Mon–Sun, mark day complete
+- **Macros**: hover over icons for protein, carbs, etc.
+- **Costs**: see per‑meal and weekly cost estimates
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+## 📦 Deployment
 
-Simply open [Lovable](https://lovable.dev/projects/309fb3c6-9c30-4253-b58f-3f1e89f28f14) and click on Share -> Publish.
+Build and deploy anywhere static sites are supported (Netlify, Vercel, etc.):
 
-## Can I connect a custom domain to my Lovable project?
+```sh
+npm run build
+# deploy contents of /dist
+```
 
-Yes, you can!
+---
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 👤 Author & License
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Created by **Your Name**.
+
+© 2025 Iron Clad Fitness. All rights reserved.
