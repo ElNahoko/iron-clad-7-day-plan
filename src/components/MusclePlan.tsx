@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Tab } from '@headlessui/react';
 import { 
-  Grid2 as Grid, 
+  Grid, 
   Paper, 
   Typography, 
   List, 
@@ -66,7 +66,7 @@ const MusclePlan: React.FC = () => {
           
           <Grid container spacing={3}>
             {plan.shopping.map((section, index) => (
-              <Grid xs={12} sm={6} md={4} key={index}>
+              <Grid item xs={12} sm={6} md={4} key={index}>
                 <Paper 
                   elevation={2} 
                   className="p-6 h-full transition-all duration-300 hover:shadow-lg hover:scale-105"
@@ -152,7 +152,7 @@ const MusclePlan: React.FC = () => {
 
                   <Grid container spacing={4}>
                     {/* Meal 1 */}
-                    <Grid xs={12} md={4}>
+                    <Grid item xs={12} md={4}>
                       <Paper 
                         elevation={3} 
                         className={`p-6 bg-gray-50 border-t-4 border-indigo-500 transition-all duration-300 hover:shadow-lg ${
@@ -180,7 +180,7 @@ const MusclePlan: React.FC = () => {
                     </Grid>
 
                     {/* Meal 2 */}
-                    <Grid xs={12} md={4}>
+                    <Grid item xs={12} md={4}>
                       <Paper 
                         elevation={3} 
                         className={`p-6 bg-gray-50 border-t-4 border-indigo-500 transition-all duration-300 hover:shadow-lg ${
@@ -208,7 +208,7 @@ const MusclePlan: React.FC = () => {
                     </Grid>
 
                     {/* Workout */}
-                    <Grid xs={12} md={4}>
+                    <Grid item xs={12} md={4}>
                       <Paper 
                         elevation={3} 
                         className={`p-6 bg-green-50 border-t-4 border-green-500 transition-all duration-300 hover:shadow-lg ${
