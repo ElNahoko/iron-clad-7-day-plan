@@ -19,11 +19,19 @@ export interface MealItem {
   instruction: string;
 }
 
+export interface DailyGroceryItem {
+  name: string;
+  quantity: string;
+  price: { FR: number; MA: number };
+  category: string;
+}
+
 export interface DayPlan {
   name: string;
   meal1: MealItem[];
   meal2: MealItem[];
   workout: string[];
+  dailyGroceries: DailyGroceryItem[];
 }
 
 export interface ShoppingItem {
@@ -39,6 +47,385 @@ export interface ShoppingSection {
 export interface Plan {
   shopping: ShoppingSection[];
   days: DayPlan[];
+}
+
+// Helper function to calculate daily groceries
+function calculateDailyGroceries(
+  dayName: string,
+  meal1: MealItem[],
+  meal2: MealItem[]
+): DailyGroceryItem[] {
+  const groceries: DailyGroceryItem[] = [];
+
+  // Define ingredient mappings for each meal item
+  const ingredientMap: Record<string, DailyGroceryItem[]> = {
+    "Saumon grillé": [
+      {
+        name: "Filet de saumon",
+        quantity: "200g",
+        price: { FR: 3.6, MA: maPrice(3.6) },
+        category: "Meats & Fish",
+      },
+    ],
+    "Saumon poché": [
+      {
+        name: "Filet de saumon",
+        quantity: "200g",
+        price: { FR: 3.6, MA: maPrice(3.6) },
+        category: "Meats & Fish",
+      },
+    ],
+    "Avocat & chia": [
+      {
+        name: "Avocat",
+        quantity: "1 pc",
+        price: { FR: 1.5, MA: maPrice(1.5) },
+        category: "Fruits & Veg",
+      },
+      {
+        name: "Graines de chia",
+        quantity: "15g",
+        price: { FR: 1, MA: maPrice(1) },
+        category: "Lipides & Seeds",
+      },
+    ],
+    "Patate douce": [
+      {
+        name: "Patate douce",
+        quantity: "200g",
+        price: { FR: 0.6, MA: maPrice(0.6) },
+        category: "Glucides",
+      },
+    ],
+    "Baies mélangées": [
+      {
+        name: "Baies mélangées",
+        quantity: "100g",
+        price: { FR: 0.8, MA: maPrice(0.8) },
+        category: "Fruits & Veg",
+      },
+    ],
+    "Baies fraîches": [
+      {
+        name: "Baies mélangées",
+        quantity: "100g",
+        price: { FR: 0.8, MA: maPrice(0.8) },
+        category: "Fruits & Veg",
+      },
+    ],
+    Baies: [
+      {
+        name: "Baies mélangées",
+        quantity: "100g",
+        price: { FR: 0.8, MA: maPrice(0.8) },
+        category: "Fruits & Veg",
+      },
+    ],
+    Entrecôte: [
+      {
+        name: "Entrecôte de bœuf",
+        quantity: "150g",
+        price: { FR: 5, MA: maPrice(5) },
+        category: "Meats & Fish",
+      },
+    ],
+    "Entrecôte grillée": [
+      {
+        name: "Entrecôte de bœuf",
+        quantity: "150g",
+        price: { FR: 5, MA: maPrice(5) },
+        category: "Meats & Fish",
+      },
+    ],
+    "Brocolis/courg.": [
+      {
+        name: "Brocolis",
+        quantity: "200g",
+        price: { FR: 1, MA: maPrice(1) },
+        category: "Fruits & Veg",
+      },
+    ],
+    "Brocoli vapeur": [
+      {
+        name: "Brocolis",
+        quantity: "200g",
+        price: { FR: 1, MA: maPrice(1) },
+        category: "Fruits & Veg",
+      },
+    ],
+    "Riz basmati": [
+      {
+        name: "Riz basmati",
+        quantity: "150g",
+        price: { FR: 0.15, MA: maPrice(0.15) },
+        category: "Glucides",
+      },
+    ],
+    Riz: [
+      {
+        name: "Riz basmati",
+        quantity: "150g",
+        price: { FR: 0.15, MA: maPrice(0.15) },
+        category: "Glucides",
+      },
+    ],
+    Pomme: [
+      {
+        name: "Pomme",
+        quantity: "1 pc",
+        price: { FR: 0.5, MA: maPrice(0.5) },
+        category: "Fruits & Veg",
+      },
+    ],
+    "Œufs brouillés": [
+      {
+        name: "Œufs",
+        quantity: "2 pcs",
+        price: { FR: 0.67, MA: maPrice(0.67) },
+        category: "Œufs & Laitiers",
+      },
+    ],
+    "Ōeufs mollets": [
+      {
+        name: "Œufs",
+        quantity: "3 pcs",
+        price: { FR: 1, MA: maPrice(1) },
+        category: "Œufs & Laitiers",
+      },
+    ],
+    "Œufs+saumon": [
+      {
+        name: "Œufs",
+        quantity: "2 pcs",
+        price: { FR: 0.67, MA: maPrice(0.67) },
+        category: "Œufs & Laitiers",
+      },
+      {
+        name: "Filet de saumon",
+        quantity: "150g",
+        price: { FR: 2.7, MA: maPrice(2.7) },
+        category: "Meats & Fish",
+      },
+    ],
+    Omelette: [
+      {
+        name: "Œufs",
+        quantity: "3 pcs",
+        price: { FR: 1, MA: maPrice(1) },
+        category: "Œufs & Laitiers",
+      },
+      {
+        name: "Filet de poulet",
+        quantity: "150g",
+        price: { FR: 2.25, MA: maPrice(2.25) },
+        category: "Meats & Fish",
+      },
+    ],
+    "Poulet poêlé": [
+      {
+        name: "Filet de poulet",
+        quantity: "150g",
+        price: { FR: 2.25, MA: maPrice(2.25) },
+        category: "Meats & Fish",
+      },
+    ],
+    "Poulet grillé": [
+      {
+        name: "Filet de poulet",
+        quantity: "150g",
+        price: { FR: 2.25, MA: maPrice(2.25) },
+        category: "Meats & Fish",
+      },
+    ],
+    "Pommes de terre": [
+      {
+        name: "Pommes de terre",
+        quantity: "200g",
+        price: { FR: 0.6, MA: maPrice(0.6) },
+        category: "Glucides",
+      },
+    ],
+    "Pdt vapeur": [
+      {
+        name: "Pommes de terre",
+        quantity: "200g",
+        price: { FR: 0.6, MA: maPrice(0.6) },
+        category: "Glucides",
+      },
+    ],
+    "Pdt douce": [
+      {
+        name: "Patate douce",
+        quantity: "150g",
+        price: { FR: 0.45, MA: maPrice(0.45) },
+        category: "Glucides",
+      },
+    ],
+    Banane: [
+      {
+        name: "Banane",
+        quantity: "1 pc",
+        price: { FR: 0.3, MA: maPrice(0.3) },
+        category: "Fruits & Veg",
+      },
+    ],
+    "Beurre cacahuè": [
+      {
+        name: "Beurre de cacahuète",
+        quantity: "15g",
+        price: { FR: 0.08, MA: maPrice(0.08) },
+        category: "Lipides & Seeds",
+      },
+    ],
+    "Côtes agneau": [
+      {
+        name: "Côtes d'agneau",
+        quantity: "200g",
+        price: { FR: 6, MA: maPrice(6) },
+        category: "Meats & Fish",
+      },
+    ],
+    Épinards: [
+      {
+        name: "Épinards",
+        quantity: "200g",
+        price: { FR: 1, MA: maPrice(1) },
+        category: "Fruits & Veg",
+      },
+    ],
+    "Pain complet": [
+      {
+        name: "Pain complet",
+        quantity: "2 tranches",
+        price: { FR: 0.67, MA: maPrice(0.67) },
+        category: "Glucides",
+      },
+    ],
+    Poire: [
+      {
+        name: "Poire",
+        quantity: "1 pc",
+        price: { FR: 0.5, MA: maPrice(0.5) },
+        category: "Fruits & Veg",
+      },
+    ],
+    Crevettes: [
+      {
+        name: "Crevettes",
+        quantity: "150g",
+        price: { FR: 4, MA: maPrice(4) },
+        category: "Meats & Fish",
+      },
+    ],
+    "Légumes rôtis": [
+      {
+        name: "Légumes variés",
+        quantity: "200g",
+        price: { FR: 1, MA: maPrice(1) },
+        category: "Fruits & Veg",
+      },
+    ],
+    "Légumes Rôtis": [
+      {
+        name: "Légumes variés",
+        quantity: "200g",
+        price: { FR: 1, MA: maPrice(1) },
+        category: "Fruits & Veg",
+      },
+    ],
+    "Légumes variés": [
+      {
+        name: "Légumes variés",
+        quantity: "200g",
+        price: { FR: 1, MA: maPrice(1) },
+        category: "Fruits & Veg",
+      },
+    ],
+    "Steak maigre": [
+      {
+        name: "Steak maigre",
+        quantity: "200g",
+        price: { FR: 6.5, MA: maPrice(6.5) },
+        category: "Meats & Fish",
+      },
+    ],
+    Cabillaud: [
+      {
+        name: "Filet de cabillaud",
+        quantity: "200g",
+        price: { FR: 3, MA: maPrice(3) },
+        category: "Meats & Fish",
+      },
+    ],
+    "Avocat&chia": [
+      {
+        name: "Avocat",
+        quantity: "1 pc",
+        price: { FR: 1.5, MA: maPrice(1.5) },
+        category: "Fruits & Veg",
+      },
+      {
+        name: "Graines de chia",
+        quantity: "15g",
+        price: { FR: 1, MA: maPrice(1) },
+        category: "Lipides & Seeds",
+      },
+    ],
+    Avocat: [
+      {
+        name: "Avocat",
+        quantity: "1 pc",
+        price: { FR: 1.5, MA: maPrice(1.5) },
+        category: "Fruits & Veg",
+      },
+    ],
+    Patatedouce: [
+      {
+        name: "Patate douce",
+        quantity: "200g",
+        price: { FR: 0.6, MA: maPrice(0.6) },
+        category: "Glucides",
+      },
+    ],
+    Créatine: [
+      {
+        name: "Créatine",
+        quantity: "5g",
+        price: { FR: 0.1, MA: maPrice(0.1) },
+        category: "Épices & Extras",
+      },
+    ],
+  };
+
+  // Collect all ingredients for the day
+  const allMeals = [...meal1, ...meal2];
+  const ingredientCounts: Record<
+    string,
+    { item: DailyGroceryItem; count: number }
+  > = {};
+
+  allMeals.forEach((meal) => {
+    const ingredients = ingredientMap[meal.label] || [];
+    ingredients.forEach((ingredient) => {
+      const key = ingredient.name;
+      if (ingredientCounts[key]) {
+        ingredientCounts[key].count += 1;
+      } else {
+        ingredientCounts[key] = { item: ingredient, count: 1 };
+      }
+    });
+  });
+
+  // Convert to final grocery list
+  Object.values(ingredientCounts).forEach(({ item, count }) => {
+    groceries.push({
+      ...item,
+      quantity: count > 1 ? `${item.quantity} × ${count}` : item.quantity,
+      price: { FR: item.price.FR * count, MA: item.price.MA * count },
+    });
+  });
+
+  return groceries;
 }
 
 export const plan: Plan = {
@@ -219,6 +606,113 @@ export const plan: Plan = {
         "Dips 3×12",
         "Élévations 3×15",
       ],
+      dailyGroceries: calculateDailyGroceries(
+        "Lundi",
+        [
+          {
+            label: "Saumon grillé",
+            detail: "200g saumon, romarin & citron",
+            protein: 40,
+            carbs: 0,
+            fats: 15,
+            calories: 315,
+            fiber: 0,
+            price: { FR: 3.6, MA: maPrice(3.6) },
+            instruction:
+              "Préchauffer grill 200°C; assaisonner; griller 4min/face; reposer.",
+          },
+          {
+            label: "Avocat & chia",
+            detail: "1 avocat + chia",
+            protein: 4,
+            carbs: 12,
+            fats: 21,
+            calories: 240,
+            fiber: 10,
+            price: { FR: 2.5, MA: maPrice(2.5) },
+            instruction: "Couper avocat; saupoudrer chia.",
+          },
+          {
+            label: "Patate douce",
+            detail: "200g cubes, huile & thym",
+            protein: 2,
+            carbs: 40,
+            fats: 0.2,
+            calories: 180,
+            fiber: 5,
+            price: { FR: 0.6, MA: maPrice(0.6) },
+            instruction: "Rôtir 200°C 25min.",
+          },
+          {
+            label: "Baies mélangées",
+            detail: "100g fraîches",
+            protein: 1,
+            carbs: 14,
+            fats: 0.5,
+            calories: 60,
+            fiber: 4,
+            price: { FR: 0.8, MA: maPrice(0.8) },
+            instruction: "Rincer et servir.",
+          },
+          {
+            label: "Créatine",
+            detail: "5g dans yaourt",
+            protein: 0,
+            carbs: 0,
+            fats: 0,
+            calories: 0,
+            fiber: 0,
+            price: { FR: 0.1, MA: maPrice(0.1) },
+            instruction: "Mélanger post-entraînement.",
+          },
+        ],
+        [
+          {
+            label: "Entrecôte",
+            detail: "150g fleur de sel",
+            protein: 35,
+            carbs: 0,
+            fats: 20,
+            calories: 340,
+            fiber: 0,
+            price: { FR: 5, MA: maPrice(5) },
+            instruction: "Saisir 3min/face; four 5min; reposer.",
+          },
+          {
+            label: "Brocolis/courg.",
+            detail: "200g, ail & herbes",
+            protein: 5,
+            carbs: 10,
+            fats: 5,
+            calories: 90,
+            fiber: 5,
+            price: { FR: 1, MA: maPrice(1) },
+            instruction: "Rôtir 200°C 20min.",
+          },
+          {
+            label: "Riz basmati",
+            detail: "150g vapeur",
+            protein: 4,
+            carbs: 45,
+            fats: 0.5,
+            calories: 210,
+            fiber: 1,
+            price: { FR: 0.15, MA: maPrice(0.15) },
+            instruction: "Cuire vapeur 10min.",
+          },
+          {
+            label: "Pomme",
+            detail: "1 pc",
+            protein: 0,
+            carbs: 25,
+            fats: 0,
+            calories: 100,
+            fiber: 4,
+            price: { FR: 0.5, MA: maPrice(0.5) },
+            instruction: "Laver et croquer.",
+          },
+        ]
+      ),
     },
     {
       name: "Mardi",
@@ -326,6 +820,112 @@ export const plan: Plan = {
         },
       ],
       workout: ["Marche 30min"],
+      dailyGroceries: calculateDailyGroceries(
+        "Mardi",
+        [
+          {
+            label: "Œufs brouillés",
+            detail: "2 œufs, ail & persil",
+            protein: 14,
+            carbs: 2,
+            fats: 10,
+            calories: 160,
+            fiber: 0,
+            price: { FR: 0.67, MA: maPrice(0.67) },
+            instruction: "Brouiller 3min feu doux.",
+          },
+          {
+            label: "Poulet poêlé",
+            detail: "150g filet, citron",
+            protein: 32,
+            carbs: 0,
+            fats: 3,
+            calories: 160,
+            fiber: 0,
+            price: { FR: 2.25, MA: maPrice(2.25) },
+            instruction: "Mariner 10min; poêler 6min/face.",
+          },
+          {
+            label: "Pommes de terre",
+            detail: "200g vapeur, romarin",
+            protein: 4,
+            carbs: 40,
+            fats: 0,
+            calories: 180,
+            fiber: 3,
+            price: { FR: 0.6, MA: maPrice(0.6) },
+            instruction: "Vapeur 15min.",
+          },
+          {
+            label: "Banane",
+            detail: "1 pc",
+            protein: 1,
+            carbs: 27,
+            fats: 0.3,
+            calories: 100,
+            fiber: 3,
+            price: { FR: 0.3, MA: maPrice(0.3) },
+            instruction: "Peler et servir.",
+          },
+          {
+            label: "Beurre cacahuè",
+            detail: "1 càs",
+            protein: 4,
+            carbs: 3,
+            fats: 8,
+            calories: 95,
+            fiber: 1,
+            price: { FR: 0.08, MA: maPrice(0.08) },
+            instruction: "Ajouter au yaourt.",
+          },
+        ],
+        [
+          {
+            label: "Côtes agneau",
+            detail: "200g grillées",
+            protein: 42,
+            carbs: 0,
+            fats: 28,
+            calories: 388,
+            fiber: 0,
+            price: { FR: 6, MA: maPrice(6) },
+            instruction: "Mariner 30min; griller 6min/face.",
+          },
+          {
+            label: "Épinards",
+            detail: "200g sauté",
+            protein: 5,
+            carbs: 7,
+            fats: 0.5,
+            calories: 50,
+            fiber: 4,
+            price: { FR: 1, MA: maPrice(1) },
+            instruction: "Sauter 5min.",
+          },
+          {
+            label: "Pain complet",
+            detail: "2 tranches",
+            protein: 6,
+            carbs: 30,
+            fats: 2,
+            calories: 160,
+            fiber: 4,
+            price: { FR: 0.67, MA: maPrice(0.67) },
+            instruction: "Griller.",
+          },
+          {
+            label: "Poire",
+            detail: "1 pc",
+            protein: 0.5,
+            carbs: 22,
+            fats: 0.3,
+            calories: 100,
+            fiber: 4,
+            price: { FR: 0.5, MA: maPrice(0.5) },
+            instruction: "Laver et croquer.",
+          },
+        ]
+      ),
     },
     {
       name: "Mercredi",
@@ -433,6 +1033,112 @@ export const plan: Plan = {
         },
       ],
       workout: ["Tractions 4×8", "Rowing 4×10", "Curl 3×12", "Face pulls 3×15"],
+      dailyGroceries: calculateDailyGroceries(
+        "Mercredi",
+        [
+          {
+            label: "Saumon poché",
+            detail: "200g poché 8min",
+            protein: 40,
+            carbs: 0,
+            fats: 12,
+            calories: 315,
+            fiber: 0,
+            price: { FR: 3.6, MA: maPrice(3.6) },
+            instruction: "Pocher 8min 80°C.",
+          },
+          {
+            label: "Avocat & chia",
+            detail: "1 avocat+chia",
+            protein: 4,
+            carbs: 12,
+            fats: 21,
+            calories: 240,
+            fiber: 10,
+            price: { FR: 2.5, MA: maPrice(2.5) },
+            instruction: "Dés & chia.",
+          },
+          {
+            label: "Patate douce",
+            detail: "150g vapeur",
+            protein: 1.5,
+            carbs: 30,
+            fats: 0,
+            calories: 135,
+            fiber: 4,
+            price: { FR: 0.45, MA: maPrice(0.45) },
+            instruction: "Vapeur 15min.",
+          },
+          {
+            label: "Baies fraîches",
+            detail: "100g",
+            protein: 1,
+            carbs: 14,
+            fats: 0.5,
+            calories: 60,
+            fiber: 4,
+            price: { FR: 0.8, MA: maPrice(0.8) },
+            instruction: "Servir crues.",
+          },
+          {
+            label: "Créatine",
+            detail: "5g yaourt",
+            protein: 0,
+            carbs: 0,
+            fats: 0,
+            calories: 0,
+            fiber: 0,
+            price: { FR: 0.1, MA: maPrice(0.1) },
+            instruction: "Après entraînement.",
+          },
+        ],
+        [
+          {
+            label: "Crevettes",
+            detail: "150g poêlées",
+            protein: 30,
+            carbs: 0,
+            fats: 2,
+            calories: 140,
+            fiber: 0,
+            price: { FR: 4, MA: maPrice(4) },
+            instruction: "Poêler 4min citron.",
+          },
+          {
+            label: "Légumes rôtis",
+            detail: "200g mélange",
+            protein: 4,
+            carbs: 15,
+            fats: 5,
+            calories: 120,
+            fiber: 6,
+            price: { FR: 1, MA: maPrice(1) },
+            instruction: "Rôtir 20min.",
+          },
+          {
+            label: "Riz",
+            detail: "150g vapeur",
+            protein: 4,
+            carbs: 45,
+            fats: 0.5,
+            calories: 210,
+            fiber: 1,
+            price: { FR: 0.15, MA: maPrice(0.15) },
+            instruction: "Vapeur 10min.",
+          },
+          {
+            label: "Pomme",
+            detail: "1 pc",
+            protein: 0,
+            carbs: 25,
+            fats: 0,
+            calories: 100,
+            fiber: 4,
+            price: { FR: 0.5, MA: maPrice(0.5) },
+            instruction: "Servir crue.",
+          },
+        ]
+      ),
     },
     {
       name: "Jeudi",
@@ -529,6 +1235,101 @@ export const plan: Plan = {
         },
       ],
       workout: ["Planche 3×60s", "Crunch 3×15", "Relevés 3×15"],
+      dailyGroceries: calculateDailyGroceries(
+        "Jeudi",
+        [
+          {
+            label: "Ōeufs mollets",
+            detail: "3 œufs",
+            protein: 18,
+            carbs: 3,
+            fats: 15,
+            calories: 210,
+            fiber: 0,
+            price: { FR: 1, MA: maPrice(1) },
+            instruction: "Cuire 6min eau frémissante.",
+          },
+          {
+            label: "Poulet grillé",
+            detail: "150g",
+            protein: 32,
+            carbs: 0,
+            fats: 3,
+            calories: 160,
+            fiber: 0,
+            price: { FR: 2.25, MA: maPrice(2.25) },
+            instruction: "Griller 6min/face.",
+          },
+          {
+            label: "Pdt vapeur",
+            detail: "200g",
+            protein: 4,
+            carbs: 40,
+            fats: 0,
+            calories: 180,
+            fiber: 3,
+            price: { FR: 0.6, MA: maPrice(0.6) },
+            instruction: "Vapeur 15min.",
+          },
+          {
+            label: "Banane",
+            detail: "1 pc",
+            protein: 1,
+            carbs: 27,
+            fats: 0.3,
+            calories: 100,
+            fiber: 3,
+            price: { FR: 0.3, MA: maPrice(0.3) },
+            instruction: "Servir.",
+          },
+        ],
+        [
+          {
+            label: "Steak maigre",
+            detail: "200g",
+            protein: 50,
+            carbs: 0,
+            fats: 8,
+            calories: 280,
+            fiber: 0,
+            price: { FR: 6.5, MA: maPrice(6.5) },
+            instruction: "Saisir 3min/face.",
+          },
+          {
+            label: "Brocoli vapeur",
+            detail: "200g",
+            protein: 5,
+            carbs: 10,
+            fats: 0.5,
+            calories: 55,
+            fiber: 5,
+            price: { FR: 1, MA: maPrice(1) },
+            instruction: "Vapeur 10min.",
+          },
+          {
+            label: "Pain complet",
+            detail: "2 tranches",
+            protein: 6,
+            carbs: 30,
+            fats: 2,
+            calories: 160,
+            fiber: 4,
+            price: { FR: 0.67, MA: maPrice(0.67) },
+            instruction: "Griller.",
+          },
+          {
+            label: "Poire",
+            detail: "1 pc",
+            protein: 0.5,
+            carbs: 22,
+            fats: 0.3,
+            calories: 100,
+            fiber: 4,
+            price: { FR: 0.5, MA: maPrice(0.5) },
+            instruction: "Déguster.",
+          },
+        ]
+      ),
     },
     {
       name: "Vendredi",
@@ -631,6 +1432,101 @@ export const plan: Plan = {
         "Dips4×10",
         "Curl4×10",
       ],
+      dailyGroceries: calculateDailyGroceries(
+        "Vendredi",
+        [
+          {
+            label: "Saumon grillé",
+            detail: "200g",
+            protein: 40,
+            carbs: 0,
+            fats: 15,
+            calories: 315,
+            fiber: 0,
+            price: { FR: 3.6, MA: maPrice(3.6) },
+            instruction: "Cuire 4min/face.",
+          },
+          {
+            label: "Avocat&chia",
+            detail: "1 avocat+chia",
+            protein: 4,
+            carbs: 12,
+            fats: 21,
+            calories: 240,
+            fiber: 10,
+            price: { FR: 2.5, MA: maPrice(2.5) },
+            instruction: "Dés & chia.",
+          },
+          {
+            label: "Pdt douce",
+            detail: "150g",
+            protein: 1.5,
+            carbs: 30,
+            fats: 0,
+            calories: 135,
+            fiber: 4,
+            price: { FR: 0.45, MA: maPrice(0.45) },
+            instruction: "Rôtir 25min.",
+          },
+          {
+            label: "Baies",
+            detail: "100g",
+            protein: 1,
+            carbs: 14,
+            fats: 0.5,
+            calories: 60,
+            fiber: 4,
+            price: { FR: 0.8, MA: maPrice(0.8) },
+            instruction: "Servir.",
+          },
+          {
+            label: "Créatine",
+            detail: "5g",
+            protein: 0,
+            carbs: 0,
+            fats: 0,
+            calories: 0,
+            fiber: 0,
+            price: { FR: 0.1, MA: maPrice(0.1) },
+            instruction: "Post-entrainement.",
+          },
+        ],
+        [
+          {
+            label: "Côtes agneau",
+            detail: "150g",
+            protein: 31,
+            carbs: 0,
+            fats: 21,
+            calories: 315,
+            fiber: 0,
+            price: { FR: 4.5, MA: maPrice(4.5) },
+            instruction: "Griller 6min/face.",
+          },
+          {
+            label: "Légumes Rôtis",
+            detail: "200g",
+            protein: 4,
+            carbs: 15,
+            fats: 5,
+            calories: 120,
+            fiber: 6,
+            price: { FR: 1, MA: maPrice(1) },
+            instruction: "Rôtir 20min.",
+          },
+          {
+            label: "Riz basmati",
+            detail: "150g",
+            protein: 4,
+            carbs: 45,
+            fats: 0.5,
+            calories: 210,
+            fiber: 1,
+            price: { FR: 0.15, MA: maPrice(0.15) },
+            instruction: "Cuire10...",
+          },
+        ]
+      ),
     },
     {
       name: "Samedi",
@@ -716,6 +1612,90 @@ export const plan: Plan = {
         },
       ],
       workout: ["Yoga/étirements"],
+      dailyGroceries: calculateDailyGroceries(
+        "Samedi",
+        [
+          {
+            label: "Omelette",
+            detail: "3 œufs+150g poulet",
+            protein: 34,
+            carbs: 1,
+            fats: 20,
+            calories: 300,
+            fiber: 0,
+            price: { FR: 3.25, MA: maPrice(3.25) },
+            instruction: "Cuire4min/face.",
+          },
+          {
+            label: "Pdt vapeur",
+            detail: "200g",
+            protein: 4,
+            carbs: 40,
+            fats: 0,
+            calories: 180,
+            fiber: 3,
+            price: { FR: 0.6, MA: maPrice(0.6) },
+            instruction: "Vapeur15min.",
+          },
+          {
+            label: "Avocat",
+            detail: "1pc",
+            protein: 2,
+            carbs: 12,
+            fats: 21,
+            calories: 240,
+            fiber: 10,
+            price: { FR: 2.5, MA: maPrice(2.5) },
+            instruction: "Dés.",
+          },
+        ],
+        [
+          {
+            label: "Cabillaud",
+            detail: "200g",
+            protein: 42,
+            carbs: 0,
+            fats: 2,
+            calories: 190,
+            fiber: 0,
+            price: { FR: 3, MA: maPrice(3) },
+            instruction: "Pocher8min.",
+          },
+          {
+            label: "Épinards",
+            detail: "200g",
+            protein: 5,
+            carbs: 7,
+            fats: 0.5,
+            calories: 50,
+            fiber: 4,
+            price: { FR: 1, MA: maPrice(1) },
+            instruction: "Sauter5min.",
+          },
+          {
+            label: "Pain complet",
+            detail: "2tranches",
+            protein: 6,
+            carbs: 30,
+            fats: 2,
+            calories: 160,
+            fiber: 4,
+            price: { FR: 0.67, MA: maPrice(0.67) },
+            instruction: "Griller.",
+          },
+          {
+            label: "Poire",
+            detail: "1pc",
+            protein: 0.5,
+            carbs: 22,
+            fats: 0.3,
+            calories: 100,
+            fiber: 4,
+            price: { FR: 0.5, MA: maPrice(0.5) },
+            instruction: "Croquer.",
+          },
+        ]
+      ),
     },
     {
       name: "Dimanche",
@@ -801,6 +1781,90 @@ export const plan: Plan = {
         },
       ],
       workout: ["Marche rapide 45min"],
+      dailyGroceries: calculateDailyGroceries(
+        "Dimanche",
+        [
+          {
+            label: "Œufs+saumon",
+            detail: "2œufs+150g saumon",
+            protein: 37,
+            carbs: 1,
+            fats: 18,
+            calories: 350,
+            fiber: 0,
+            price: { FR: 5.67, MA: maPrice(5.67) },
+            instruction: "Œufs6min,servir saumon.",
+          },
+          {
+            label: "Patate douce",
+            detail: "200g",
+            protein: 2,
+            carbs: 40,
+            fats: 0.2,
+            calories: 180,
+            fiber: 5,
+            price: { FR: 0.6, MA: maPrice(0.6) },
+            instruction: "Rôtir25min.",
+          },
+          {
+            label: "Baies",
+            detail: "100g",
+            protein: 1,
+            carbs: 14,
+            fats: 0.5,
+            calories: 60,
+            fiber: 4,
+            price: { FR: 0.8, MA: maPrice(0.8) },
+            instruction: "Crues.",
+          },
+        ],
+        [
+          {
+            label: "Entrecôte grillée",
+            detail: "150g",
+            protein: 35,
+            carbs: 0,
+            fats: 20,
+            calories: 340,
+            fiber: 0,
+            price: { FR: 5, MA: maPrice(5) },
+            instruction: "Griller4min/face.",
+          },
+          {
+            label: "Légumes variés",
+            detail: "200g",
+            protein: 4,
+            carbs: 15,
+            fats: 5,
+            calories: 120,
+            fiber: 6,
+            price: { FR: 1, MA: maPrice(1) },
+            instruction: "Rôtir20min.",
+          },
+          {
+            label: "Riz basmati",
+            detail: "150g",
+            protein: 4,
+            carbs: 45,
+            fats: 0.5,
+            calories: 210,
+            fiber: 1,
+            price: { FR: 0.15, MA: maPrice(0.15) },
+            instruction: "Cuire10min.",
+          },
+          {
+            label: "Pomme",
+            detail: "1pc",
+            protein: 0,
+            carbs: 25,
+            fats: 0,
+            calories: 100,
+            fiber: 4,
+            price: { FR: 0.5, MA: maPrice(0.5) },
+            instruction: "Croquer.",
+          },
+        ]
+      ),
     },
   ],
 };

@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Chip,
 } from "@mui/material";
 import {
   Sparkles,
@@ -24,7 +25,7 @@ import {
   Clock,
   Target,
 } from "lucide-react";
-import { plan, Region } from "../data/plan";
+import { plan, Region, DailyGroceryItem } from "../data/plan";
 
 const infoBadges = [
   { icon: <Target className="w-5 h-5 text-slate-500" />, label: "7 Days" },
@@ -54,15 +55,8 @@ const MacroIcon = ({
   </Tooltip>
 );
 
-const calculateWeeklyCost = (region: Region) =>
-  plan.days.reduce(
-    (sum, day) =>
-      sum +
-      day.meal1
-        .concat(day.meal2)
-        .reduce((s, item) => s + item.price[region], 0),
-    0
-  );
+const calculateDailyCost = (groceries: DailyGroceryItem[], region: Region) =>
+  groceries.reduce((sum, item) => sum + item.price[region], 0);
 
 const MusclePlan: React.FC = () => {
   const [boughtItems, setBoughtItems] = useState<Set<string>>(new Set());
@@ -73,7 +67,10 @@ const MusclePlan: React.FC = () => {
   const [prepText, setPrepText] = useState<string>("");
 
   const currency = region === "FR" ? "€" : "MAD";
-  const weeklyCost = calculateWeeklyCost(region);
+  const weeklyCost = plan.days.reduce(
+    (sum, day) => sum + calculateDailyCost(day.dailyGroceries, region),
+    0
+  );
 
   const toggleBought = (name: string) => {
     const s = new Set(boughtItems);
@@ -119,61 +116,43 @@ const MusclePlan: React.FC = () => {
             </Typography>
           </header>
 
-          {/* Shopping List */}
+          {/* Remove the old shopping list section, replace with daily planning info */}
           <section className="mb-16">
             <div className="flex items-center justify-center mb-8">
               <ShoppingCart className="w-10 h-10 text-emerald-600 mr-3" />
               <Typography variant="h4" className="font-bold text-slate-800">
-                Shopping List
+                Daily Shopping Plan
               </Typography>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {plan.shopping.map((sec, i) => (
-                <Paper
-                  key={i}
-                  elevation={0}
-                  className="p-6 bg-white/80 backdrop-blur-sm border rounded-2xl transition-transform transform hover:-translate-y-1 hover:shadow-lg"
-                >
-                  <Typography variant="h6" className="font-bold mb-4">
-                    {sec.category}
-                  </Typography>
-                  <List dense>
-                    {sec.items.map((it, j) => (
-                      <ListItem key={j} disablePadding>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={boughtItems.has(it.name)}
-                              onChange={() => toggleBought(it.name)}
-                              sx={{ "&.Mui-checked": { color: "#059669" } }}
-                            />
-                          }
-                          label={
-                            <span
-                              className={
-                                boughtItems.has(it.name)
-                                  ? "line-through text-gray-400"
-                                  : ""
-                              }
-                            >
-                              {it.name} – {currency}
-                              {it.price[region].toFixed(2)}
-                            </span>
-                          }
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
-                </Paper>
-              ))}
-            </div>
+            <Paper
+              elevation={0}
+              className="p-6 bg-white/80 backdrop-blur-sm border rounded-2xl"
+            >
+              <Typography
+                variant="body1"
+                className="text-center text-slate-600 mb-4"
+              >
+                This plan is designed for daily grocery shopping. Each day shows
+                exactly what to buy for that day's meals.
+              </Typography>
+              <div className="flex justify-center gap-4 text-sm text-slate-500">
+                <span>
+                  Total Weekly Cost: {currency}
+                  {weeklyCost.toFixed(2)}
+                </span>
+                <span>•</span>
+                <span>
+                  Average Daily Cost: {currency}
+                  {(weeklyCost / 7).toFixed(2)}
+                </span>
+              </div>
+            </Paper>
           </section>
 
-          {/* Daily Plans */}
+          {/* Daily Plans - Updated */}
           <section>
             <Typography variant="h4" className="text-center mb-12">
-              Daily Plans (≈ {currency}
-              {weeklyCost.toFixed(2)}/week)
+              Daily Plans & Shopping Lists
             </Typography>
             <Tab.Group>
               <div className="sticky top-0 bg-white/90 backdrop-blur-sm z-10 p-3 mb-4 rounded-2xl">
@@ -209,6 +188,68 @@ const MusclePlan: React.FC = () => {
                         label={`Mark ${day.name} completed`}
                       />
                     </div>
+
+                    {/* Daily Shopping List */}
+                    <Paper
+                      elevation={0}
+                      className="p-6 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200"
+                    >
+                      <div className="flex items-center mb-4">
+                        <ShoppingCart className="w-6 h-6 text-emerald-600 mr-2" />
+                        <Typography variant="h6" className="font-bold">
+                          Today's Shopping List ({currency}
+                          {calculateDailyCost(
+                            day.dailyGroceries,
+                            region
+                          ).toFixed(2)}
+                          )
+                        </Typography>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {Object.entries(
+                          day.dailyGroceries.reduce((acc, item) => {
+                            if (!acc[item.category]) acc[item.category] = [];
+                            acc[item.category].push(item);
+                            return acc;
+                          }, {} as Record<string, DailyGroceryItem[]>)
+                        ).map(([category, items]) => (
+                          <div key={category} className="space-y-2">
+                            <Chip
+                              label={category}
+                              size="small"
+                              color="primary"
+                              variant="outlined"
+                            />
+                            {items.map((item, i) => (
+                              <div key={i} className="flex items-center">
+                                <Checkbox
+                                  size="small"
+                                  checked={boughtItems.has(
+                                    `${day.name}-${item.name}`
+                                  )}
+                                  onChange={() =>
+                                    toggleBought(`${day.name}-${item.name}`)
+                                  }
+                                  sx={{ "&.Mui-checked": { color: "#059669" } }}
+                                />
+                                <span
+                                  className={`text-sm ${
+                                    boughtItems.has(`${day.name}-${item.name}`)
+                                      ? "line-through text-gray-400"
+                                      : ""
+                                  }`}
+                                >
+                                  {item.name} ({item.quantity}) - {currency}
+                                  {item.price[region].toFixed(2)}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    </Paper>
+
+                    {/* Meals and Workout */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                       {(["meal1", "meal2"] as const).map((key) => {
                         const items = day[key];
